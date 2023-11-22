@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    {% load static %}
+</head>
+
+<style>
+
+:root {
+    --royal-blue-1: #536976;
+    --royal-blue-2: #292e49;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(135deg, var(--royal-blue-1), var(--royal-blue-2) );
+}
+
+form {
+    display: flex;
+    justify-content: center;
+    height: 70%;
+
+    padding: 10% 0 20% 0;
+
+}
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 40%;
+    height: min-content;
+
+
+    border: 1px solid rgba(160, 232, 246, 0.6);
+    border-radius: 20px;
+    background-color: rgba(190, 187, 187, 0.55);
+    box-shadow: 0 0 10px 5px rgba(76, 109, 114, 0.3);
+
+    backdrop-filter: blur(10px);
+
+}
+
+.login-container img {
+    width: 70%;
+    aspect-ratio: 1/1;
+    margin-top: 10%;
+}
+
+.alert {
+    width: 80%;
+    height: 20%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+
+    justify-content: center;
+    align-items: center;
+}
+
+.username-container {
+    width: 70%;
+}
+
+.username-container label {
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+.username-container input {
+    width: 60%;
+    height: 20%;
+    float: right;
+}
+
+.password-container {
+    width: 70%;
+}
+
+.password-container label {
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+.password-container input {
+    width: 60%;
+    height: 20%;
+    float: right;
+}
+
+.submit-button {
+    margin: 20px 0;
+
+    height: 25px;
+    aspect-ratio: 3/1;
+
+    background-color: white;
+
+    font-size: 15px;
+
+    border: none;
+    border-radius: 5px;
+
+}
+
+</style>
+
+<body>
+    <form action="/" method="post"> {% csrf_token %}
+        <div class="login-container">
+            <img src="{% static 'logo.png' %}" alt="">
+
+            <div class="alert">
+                {% if message %}
+                    {{ message }}
+                {% endif %}
+            </div>
+        
+            <div class="username-container">
+                <label for="username">Username: </label>
+                <input type="text" name="username" id="username">
+            </div>
+
+            <div class="password-container">
+                <label for="password">Password: </label>
+                <input type="password" name="password" id="password">
+            </div>
+
+            <button type="submit" class="submit-button">
+                Login
+            </button>
+
+        </div>
+    </form>
+</body>
+
+<script>
+    let alert_area = document.querySelector(".alert");
+
+    console.log(alert_area);
+    console.log(alert_area.childNodes);
+
+    if (alert_area.childNodes.length == 0) {
+        alert_area.style.display = "none";
+    }
+    else {
+        alert_area.style.display = "flex";
+    }
+</script>
+
+</html>
