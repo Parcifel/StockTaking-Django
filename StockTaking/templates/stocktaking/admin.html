@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+</head>
+
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+    }
+</style>
+
+<body>
+    {% include '_nav.html' %}
+
+    <div class="table_nav">
+        <button class="user_btn">Users</button>
+        <button class="transaction_type_btn">Transaction Types</button>
+        <button class="stock_btn">Stock</button>
+    </div>
+
+    <div class="table_container">
+        <div class="table_view">
+
+        </div>
+        <div class="table_add">
+
+        </div>
+    </div>
+
+</body>
+
+{% load static %}
+
+<script src="{% static 'jquery.js' %}"></script>
+<script>
+    let user_btn = document.querySelector('.user_btn');
+    let transaction_type_btn = document.querySelector('.transaction_type_btn');
+    let stock_btn = document.querySelector('.stock_btn');
+
+    function load_table(response) {
+        let table_view = document.querySelector('.table_view');
+        let table_add = document.querySelector('.table_add');
+
+        table_view.innerHTML = '';
+        table_add.innerHTML = '';
+
+        let table = document.createElement('table');
+        table.classList.add('table');
+
+        let table_head = document.createElement('thead');
+        let table_body = document.createElement('tbody');
+
+        let table_head_row = document.createElement('tr');
+        let headers = response['headers'];
+        for (let i = 0; i < headers.length; i++) {
+            let table_head_cell = document.createElement('th');
+            table_head_cell.innerHTML = headers[i];
+            table_head_row.appendChild(table_head_cell);
+        }
+        table_head.appendChild(table_head_row);
+
+        let table_body_rows = [];
+        let table_data = response['data'];
+        for (let i = 0; i < table_data.length; i++) {
+            let table_body_row = document.createElement('tr');
+            for (let j=0; j < headers.length; j++) {
+                let key = headers[j];
+                let table_body_cell = document.createElement('td');
+                table_body_cell.innerHTML = table_data[i][j];
+                table_body_cell.setAttribute('data-key', headers[j]);
+                table_body_row.appendChild(table_body_cell);
+            }
+            table_body_rows.push(table_body_row);
+        }
+        for (let i = 0; i < table_body_rows.length; i++) {
+            table_body.appendChild(table_body_rows[i]);
+        }
+
+        table.appendChild(table_head);
+        table.appendChild(table_body);
+
+        table_view.appendChild(table);
+    }
+
+    user_btn.addEventListener('click', () => {
+        console.log("Fetching 'Users' table ...");
+    
+        $.ajax({
+            url: '/api/get-table/users/0/10',
+            type: 'GET',
+            success: function(response) {
+                load_table(response);
+            }
+        })
+    });
+
+    transaction_type_btn.addEventListener('click', () => {
+        console.log("Fetching 'Transaction Types' table ...");
+
+        $.ajax({
+            url: '/api/get-table/transaction_types/0/10',
+            type: 'GET',
+            success: function(response) {
+                load_table(response);
+            }
+        })
+    });
+
+    stock_btn.addEventListener('click', () => {
+        console.log("Fetching 'Stock' table ...");
+
+        $.ajax({
+            url: '/api/get-table/stock/0/10',
+            type: 'GET',
+            success: function(response) {
+                load_table(response);
+            }
+        })
+    });
+
+</script>
+
+</html>

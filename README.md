@@ -5,7 +5,7 @@
 > <br/>
 > **Technologies**:
 >  - Python 3.10.12
->  - Django 3.1.2
+>  - Django 4.2.7
 >  - MySQL
 >  - JQuery - Ajax
 >  - In-Place Editing
