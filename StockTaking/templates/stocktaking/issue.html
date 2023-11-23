@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Issue</title>
+</head>
+
+<style>
+
+</style>
+
+<body>
+    {% include "_nav.html" %}
+
+    <div class="table_view"></div>
+    <div class="page_nav">
+
+    </div>
+</body>
+
+{% load static %}
+
+<script src="{% static 'jquery.js' %}"></script>
+<script src="{% static 'table.js' %}"></script>
+<script>
+
+    let table_view = document.querySelector('.table_view');
+
+    function loadTable(start=0, quantity=10) {
+        $.ajax({
+            url: `/api/getIssue/${start}/${quantity}/`,
+            type: "GET",
+            success: function(response) {
+                let headers = response['headers'];
+                let data = response['data'];
+
+                let table = new Table(table_view, 'issue', headers, data);
+            }
+        });
+    }
+
+    loadTable();
+
+    // Load Page navigations
+    let page_nav = document.querySelector('.page_nav');
+    let pages = Number("{{ pages }}");
+    let transactions_per_page = Number("{{ transactions_per_page }}");
+
+    for (let i = 0; i < pages; i++) {
+        let page = document.createElement('a');
+        page.setAttribute('href', `api/getIssue/${i * transactions_per_page}/${transactions_per_page}/`);
+        page.innerHTML = i + 1;
+
+        page.addEventListener('click', function(e) {
+            e.preventDefault();
+            loadTable(i * transactions_per_page, transactions_per_page);
+        });
+
+        page_nav.appendChild(page);
+    }
+
+
+
+</script>
+
+</html>

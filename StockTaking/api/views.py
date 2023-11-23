@@ -181,3 +181,40 @@ def update_table_element(request, table, id, column, data_type, new_value):
         print(e)
         return JsonResponse({}, safe=False)
     
+    
+def get_dash_info(request):
+    query = """
+        SELECT id, description, quantity
+        FROM stock
+    """
+    
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        
+        headers = ['id', 'description', 'quantity']
+        data = _get_table_data(cursor)
+        
+    return JsonResponse({
+        'headers': headers,
+        'data': data 
+    }, safe=False)   
+    
+def get_issue(request, start, quantity):
+    """
+    SELECT transaction.id, users.username, transaction_types.description, stock.description, transaction.quantity, transaction.date
+    FROM transactions
+    LEFT JOIN users ON transactions.user_id = users.id
+    LEFT JOIN transaction_types ON transactions.transaction_type_id = transaction_types.id
+    LEFT JOIN stock ON transactions.stock_id = stock.id
+    WHERE transaction.transaction_type_id = 2
+    """
+    query = "SELECT transactions.id, users.username, transaction_types.description, stock.description, transactions.quantity, transactions.date FROM transactions LEFT JOIN users ON transactions.user_id = users.id LEFT JOIN transaction_types ON transactions.transaction_type_id = transaction_types.id LEFT JOIN stock ON transactions.stock_id = stock.id"
+    response = _get_table_response(query=query, start=start, quantity=quantity)
+    
+    return response
+
+def get_log(request):
+    query = "SELECT transactions.id, users.username, transaction_types.description, stock.description, transactions.quantity, transactions.date FROM transactions LEFT JOIN users ON transactions.user_id = users.id LEFT JOIN transaction_types ON transactions.transaction_type_id = transaction_types.id LEFT JOIN stock ON transactions.stock_id = stock.id"
+    response = _get_table_response(query=query)
+    
+    return response

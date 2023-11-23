@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Dashboard</title>
+    <title>Logs</title>
 </head>
 
 <style>
@@ -26,13 +26,13 @@
 
     function loadTable() {
         $.ajax({
-            url: "/api/getDashboard/",
+            url: "/api/getLog/",
             type: "GET",
             success: function(response) {
                 let headers = response['headers'];
                 let data = response['data'];
 
-                let table = new Table(table_view, 'stock', headers, data);
+                let table = new Table(table_view, 'logs', headers, data);
             }
         });
     }

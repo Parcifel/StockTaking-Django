@@ -7,4 +7,8 @@ urlpatterns = [
     path('get-table/<str:table>/<int:start>/<int:quantity>/', views.get_table_elements, name='get-table-elements'),
 
     path('update/<str:table>/<int:id>/<str:column>/<str:data_type>/<str:new_value>/', views.update_table_element, name='update-table-element'),
+
+    path('getDashboard/', views.get_dash_info, name='get-dashboard'),
+    path('getIssue/<int:start>/<int:quantity>/', views.get_issue, name='get-issue'),
+    path('getLog/', views.get_log, name='get-log'),
 ]
