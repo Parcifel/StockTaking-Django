@@ -1,13 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'table.css' %}">
     <title>Logs</title>
 </head>
 
 <style>
+    .table_view {
+        margin-top: 50px;
+    }
 
+    th {
+        background-color: #d35da2;
+        color: white;
+    }
 </style>
 
 <body>
@@ -15,8 +24,6 @@
 
     <div class="table_view"></div>
 </body>
-
-{% load static %}
 
 <script src="{% static 'jquery.js' %}"></script>
 <script src="{% static 'table.js' %}"></script>
