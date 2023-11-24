@@ -1,6 +1,15 @@
 table, th, td {
-    border-collapse: collapse;
+    border-collapse: seperate;
+    border-spacing: 0;
     margin: 0 auto;
+    overflow: hidden;
+}
+
+table {
+    border-radius: 10px 10px 0 0;
+    border: 1px solid rgba(190, 190, 190, 0.6);
+
+    box-shadow: 0 0 10px 5px rgba(68, 68, 68, 0.6);
 }
 
 th, td {
@@ -9,7 +18,11 @@ th, td {
 }
 
 tr:nth-child(even) {
-    background-color: #bbbbbb;
+    background-color: rgba(187, 187, 187, 0.6);
+}
+
+tr:nth-child(odd) {
+    background-color: rgba(187, 187, 187, 0.3);
 }
 
 td {

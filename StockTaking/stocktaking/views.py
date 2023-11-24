@@ -22,3 +22,6 @@ def log(request):
 
 def admin(request):
     return render(request, 'stocktaking/admin.html', {})
+
+def logout(request):
+    return redirect('/logout')
