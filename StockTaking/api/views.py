@@ -245,3 +245,132 @@ def get_form_data(request, form):
         return JsonResponse({
             'alert': f"Unknown form, {form}"    
         }, safe=False)
+        
+def addNewStock(stock_name):
+    query = f"INSERT INTO stock (description, quantity) VALUES ('{stock_name}', 0)"
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        
+    query = f"SELECT id FROM stock WHERE description = '{stock_name}'"
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        data = _get_table_data(cursor)
+    
+    return data[0][0]
+        
+def add_transaction(request, user_id, transaction_type, stock_id, quantity):
+    try:
+        user_id = int(user_id)
+        transaction_type = int(transaction_type)
+        quantity = int(quantity)
+    except:
+        return JsonResponse({
+            'alert': "Invalid input data types.",
+        }, safe=False)
+        
+    # Stock can only be negative if its a correction
+    if quantity <= 0 and transaction_type != 4:
+        return JsonResponse({
+            'alert': "Quantity must be greater than 0.",
+        }, safe=False)
+        
+    # Validation
+    query = f"SELECT id FROM users WHERE id = {user_id}"
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        data = _get_table_data(cursor)
+        if len(data) == 0:
+            return JsonResponse({
+                'alert': f"User with id {user_id} does not exist.",
+            }, safe=False)
+        
+    query = f"SELECT id FROM transaction_types WHERE id = {transaction_type}"
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        data = _get_table_data(cursor)
+        if len(data) == 0:
+            return JsonResponse({
+                'alert': f"Transaction type with id {transaction_type} does not exist.",
+            }, safe=False)
+        
+    query = f"SELECT id FROM stock WHERE id = {stock_id}"
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        data = _get_table_data(cursor)
+        if len(data) == 0:
+            return JsonResponse({
+                'alert': f"Stock with id {stock_id} does not exist.",
+            }, safe=False)
+        
+    # Add transaction
+    return log_transaction(user_id, transaction_type, stock_id, quantity)
+
+
+def log_transaction(user_id, transaction_type_id, stock_id, quantity):
+    currect_quantity = None
+    query = f"SELECT quantity FROM stock WHERE id = {stock_id}"
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        data = _get_table_data(cursor)
+        currect_quantity = data[0][0]
+    
+    # Add Stock
+    if transaction_type_id == 1:
+        query = f"UPDATE stock SET quantity = quantity + {quantity} WHERE id = {stock_id}"
+        with connection.cursor() as cursor:
+            cursor.execute(query)
+    
+    # Personal Use
+    elif transaction_type_id == 2:
+        if currect_quantity - quantity < 0:
+            return JsonResponse({
+                'alert': f"Not enough stock to complete transaction.",
+            }, safe=False)
+            
+        query = f"UPDATE stock SET quantity = quantity - {quantity} WHERE id = {stock_id}"
+        with connection.cursor() as cursor:
+            cursor.execute(query)
+        
+    # Loss
+    elif transaction_type_id == 3:
+        if currect_quantity - quantity < 0:
+            return JsonResponse({
+                'alert': f"Not enough stock to complete transaction.",
+            }, safe=False)
+            
+        query = f"UPDATE stock SET quantity = quantity - {quantity} WHERE id = {stock_id}"
+        with connection.cursor() as cursor:
+            cursor.execute(query)
+    
+    # Correction
+    elif transaction_type_id == 4:
+        if currect_quantity + quantity < 0:
+            return JsonResponse({
+                'alert': f"Not enough stock to complete transaction.",
+            }, safe=False)
+        
+        query = f"UPDATE stock SET quantity = quantity + {quantity} WHERE id = {stock_id}"
+        with connection.cursor() as cursor:
+            cursor.execute(query)
+    
+    # Sell
+    elif transaction_type_id == 5:
+        if currect_quantity - quantity < 0:
+            return JsonResponse({
+                'alert': f"Not enough stock to complete transaction.",
+            }, safe=False)
+            
+        query = f"UPDATE stock SET quantity = quantity - {quantity} WHERE id = {stock_id}"
+        with connection.cursor() as cursor:
+            cursor.execute(query)
+    
+    else:
+        return JsonResponse({
+            'alert': f"Transaction type with id {transaction_type_id} does not exist.",
+        }, safe=False)
+    
+    query = f"INSERT INTO transactions (user_id, transaction_type_id, stock_id, quantity, date) VALUES ({user_id}, {transaction_type_id}, {stock_id}, {quantity}, NOW())"
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        
+    return JsonResponse({}, safe=False)

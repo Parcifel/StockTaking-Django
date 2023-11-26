@@ -13,4 +13,6 @@ urlpatterns = [
     path('getLog/', views.get_log, name='get-log'),
 
     path('get-form-data/<str:form>/', views.get_form_data, name='get-form-data'),
+    
+    path('add-transaction/<int:user_id>/<int:transaction_type>/<int:stock_id>/<str:quantity>/', views.add_transaction, name='add-transaction'),
 ]

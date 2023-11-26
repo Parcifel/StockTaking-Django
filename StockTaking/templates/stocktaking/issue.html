@@ -18,7 +18,7 @@
         height: 100vh;
         margin: 0;
 
-        background: linear-gradient(135deg, var(--royal-blue-1), var(--royal-blue-2) );
+        /*background: linear-gradient(135deg, var(--royal-blue-1), var(--royal-blue-2) ); */
     }
     
     .table_view {
@@ -57,6 +57,7 @@
         border: 2px solid rgba(231, 231, 231, 0.4);
     
         box-shadow: 0 0 10px 5px rgba(68, 68, 68, 0.6);
+        backdrop-filter: blur(5px);
 
         transition: height 5s;
     }
@@ -81,7 +82,7 @@
 
         display: grid;
         grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
         grid-gap: 10px;
     }
 
@@ -93,7 +94,7 @@
         display: block;
     }
 
-    .stock_select {
+    /*.stock_select {
         position: relative;
         display: inline-block;
     }
@@ -114,12 +115,35 @@
     .search_links.show {
         display: block;
     
+    }*/
+
+    .submit_container {
+        grid-column-start: 1;
+        grid-column-end: 3;
+        grid-row: 5;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .add_submit {
+        width: max-content;
+    }
+    
+    .alert_message {
+        display: none;
+    }
+
+    .alert_message.alert {
+        display: block;
     }
 
 </style>
 
 <body>
     {% include "_nav.html" %}
+    {% include "_bg.html" %}
 
     <div class="table_view"></div>
     <div class="page_nav"></div>
@@ -129,6 +153,7 @@
         <h3 class="log_new_header">Log New Transaction</h3>
 
         <h4 class="loading_message">Loading ...</h4>
+        <h4 class="alert_message"></h4>
 
         <form method="post" class="add_form">
             <label for="username">User: </label>
@@ -138,13 +163,18 @@
             <select class="type_select" name="type" id="type"></select>
 
             <label for="stock">Stock type: </label>
-            <div class="stock_select" id="stock">
+            <select class="stock_select"></select>
+            <!-- <div class="stock_select" id="stock">
                 <input type="text" name="stock_inp" id="stock_inp">
                 <div class="search_links"></div>
-            </div>
+            </div> -->
 
             <label for="quantity">Quantity</label>
             <input type="number" id="quantity">
+
+            <div class="submit_container">
+                <input type="submit" name="" id="" value="Submit" class="add_submit">
+            </div>  
         </form>
 
     </div>
@@ -155,6 +185,7 @@
 <script src="{% static 'table.js' %}"></script>
 <script>
 
+    let alert_message = document.querySelector('.alert_message');
     let table_view = document.querySelector('.table_view');
 
     function loadTable(start=0, quantity=10) {
@@ -172,6 +203,12 @@
 
     loadTable();
 
+    function alertMessage(msg) {
+        alert_message.classList.add('alert');
+        alert_message.innerHTML = ""
+        alert_message.innerHTML = msg;
+    }
+
     // Load Page navigations
     let page_nav = document.querySelector('.page_nav');
     let pages = Number("{{ pages }}");
@@ -180,6 +217,7 @@
     for (let i = 0; i < pages; i++) {
         let page = document.createElement('a');
         page.setAttribute('href', `api/getIssue/${i * transactions_per_page}/${transactions_per_page}/`);
+        page.style.padding = "0 5px";
         page.innerHTML = i + 1;
 
         page.addEventListener('click', (e) => {
@@ -187,11 +225,10 @@
             loadTable(i * transactions_per_page, transactions_per_page);
         });
 
-        console.log(i);
         page_nav.appendChild(page);
     }
 
-
+/*
     function showSearch() {
         let search_links_container = document.querySelector('.search_links');
         search_links_container.classList.add('show');
@@ -223,7 +260,7 @@
             }
         });
 
-    }
+    }*/
 
     let header_btn = document.querySelector('.log_new_header');
     let loading_message = document.querySelector('.loading_message');
@@ -231,6 +268,7 @@
     header_btn.addEventListener('click', () => {
         header_btn.classList.toggle('active');
         loading_message.classList.toggle('show');
+        alert_message.classList.remove('alert');
 
         $.ajax({
             url: '/api/get-form-data/issue/',
@@ -244,7 +282,10 @@
                     let username_select = document.querySelector('.username_select');
                     let type_select = document.querySelector('.type_select');
                     let stock_select = document.querySelector('.stock_select');
-                    let search_links = document.querySelector('.search_links');
+
+                    username_select.innerHTML = "";
+                    type_select.innerHTML = "";
+                    stock_select.innerHTML = "";
 
                     users.forEach(user => {
                         let option = document.createElement('option');
@@ -261,31 +302,89 @@
                         type_select.appendChild(option);
                     });
                     stock.forEach(stock => {
-                        let search_link = document.createElement('a');
+                        let search_link = document.createElement('option');
                         search_link.setAttribute('value', stock[0]);
                         search_link.classList.add('search_link');
                         search_link.innerHTML = stock[1];
-                        search_link.style.display = "none"
+                        // search_link.style.display = "none";
 
-                        search_links.appendChild(search_link);
+                        stock_select.appendChild(search_link);
                     });
 
+                    /*
                     let stock_inp = document.querySelector('#stock_inp');
                     stock_inp.setAttribute('onfocus', 'showSearch()');
                     stock_inp.setAttribute('onblur', 'hideSearch()');
                     stock_inp.setAttribute('onkeyup', 'searchStock()');
+                    stock_inp.value = "";
+                    */
+
+                    let quantity_inp = document.querySelector('#quantity');
+                    quantity_inp.value = "";
 
                     add_form.classList.toggle('active');
 
                 } else {
-                    alert(response['alert']);
+                    alertMessage(response['alert']);
+                    
                 }
                 loading_message.classList.toggle('show');
             }
         });
-
-
     });
+
+    let submit_btn = document.querySelector('.add_submit');
+    submit_btn.addEventListener('click', (e) => {
+        alert_message.classList.remove('alert');
+        e.preventDefault();
+
+        let username_select = document.querySelector('.username_select');
+        let type_select = document.querySelector('.type_select');
+        // let stock_inp = document.querySelector('#stock_inp');
+        let stock_select = document.querySelector('.stock_select');
+        let quantity_inp = document.querySelector('#quantity');
+
+        let user_index = username_select.value;
+        let type_index = type_select.value;
+        // let stock = stock_inp.value;
+        let stock = stock_select.value;
+        let quantity = quantity_inp.value;
+
+        if (stock == "") {
+            alertMessage("Stock field is required.");
+            return
+        }
+        if (quantity == '') {
+            alertMessage("Quantity field required.");
+            return
+        }
+
+        if (quantity <= 0 && type_index != 4) {
+            alertMessage("Quantity must be greater than 0.");
+            return
+        }
+
+        console.log(`${user_index} ${type_index} ${stock} ${quantity}`);
+        /* SEND DATA */
+        $.ajax({
+            url: `/api/add-transaction/${user_index}/${type_index}/${stock}/${quantity}/`,
+            type: 'GET',
+            success: function(response) {
+                if (!response.hasOwnProperty('alert')) {
+                    alertMessage("Transaction added successfully.");
+                    loadTable();
+                } else {
+                    alertMessage(response['alert']);
+                }
+            }
+        });
+
+        /* LOAD NEW TABLE */
+
+        header_btn.classList.toggle('active');
+        add_form.classList.toggle('active');
+
+    })
 
 
 </script>
