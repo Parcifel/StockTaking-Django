@@ -29,15 +29,126 @@
         background-color: #e5e842;
     }
 
+    .page_nav {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding-top: 10px;
+    }
+
+    .page_nav a {
+        color: white;
+        text-decoration: none;
+    }
+
+    .log_new_container {
+        width: max-content;
+        display: flex;
+        flex-direction: column;
+        margin: 0 auto;
+        margin-top: 20px;
+        padding: 20px;
+        align-items: center;
+        justify-content: center;
+
+        background-color: rgba(220, 220, 220, 0.6);
+        border-radius: 10px;
+        border: 2px solid rgba(231, 231, 231, 0.4);
+    
+        box-shadow: 0 0 10px 5px rgba(68, 68, 68, 0.6);
+
+        transition: height 5s;
+    }
+
+    .log_new_header {
+        margin: 0 auto;
+        padding-bottom: 10px;
+        cursor: pointer;
+    }
+
+    .log_new_header.active {
+        text-decoration: underline;
+    }
+
+    .add_form {
+        display: none;
+    }
+
+    .add_form.active {
+        height: max-content;
+        width: max-content;
+
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
+        grid-gap: 10px;
+    }
+
+    .loading_message {
+        display: none;
+    }
+
+    .loading_message.show {
+        display: block;
+    }
+
+    .stock_select {
+        position: relative;
+        display: inline-block;
+    }
+
+    .search_links {
+        position: absolute;
+        z-index: 1;
+        background-color: white;
+        padding: 0 5px;
+        color: black;
+        cursor: pointer;
+    }    
+
+    .search_links {
+        display: none;
+    }
+
+    .search_links.show {
+        display: block;
+    
+    }
+
 </style>
 
 <body>
     {% include "_nav.html" %}
 
     <div class="table_view"></div>
-    <div class="page_nav">
+    <div class="page_nav"></div>
+
+    <div class="log_new_container">
+
+        <h3 class="log_new_header">Log New Transaction</h3>
+
+        <h4 class="loading_message">Loading ...</h4>
+
+        <form method="post" class="add_form">
+            <label for="username">User: </label>
+            <select class="username_select" name="username" id="username"></select>
+
+            <label for="type">Transaction Type: </label>
+            <select class="type_select" name="type" id="type"></select>
+
+            <label for="stock">Stock type: </label>
+            <div class="stock_select" id="stock">
+                <input type="text" name="stock_inp" id="stock_inp">
+                <div class="search_links"></div>
+            </div>
+
+            <label for="quantity">Quantity</label>
+            <input type="number" id="quantity">
+        </form>
 
     </div>
+
 </body>
 
 <script src="{% static 'jquery.js' %}"></script>
@@ -71,14 +182,110 @@
         page.setAttribute('href', `api/getIssue/${i * transactions_per_page}/${transactions_per_page}/`);
         page.innerHTML = i + 1;
 
-        page.addEventListener('click', function(e) {
+        page.addEventListener('click', (e) => {
             e.preventDefault();
             loadTable(i * transactions_per_page, transactions_per_page);
         });
 
+        console.log(i);
         page_nav.appendChild(page);
     }
 
+
+    function showSearch() {
+        let search_links_container = document.querySelector('.search_links');
+        search_links_container.classList.add('show');
+        let search_links = document.querySelectorAll('.search_link');
+        search_links.forEach(link => {
+            link.style.display = "block";
+        });
+    }
+
+    function hideSearch() {
+        let search_links_container = document.querySelector('.search_links');
+        search_links_container.classList.remove('show');
+        let search_links = document.querySelectorAll('.search_link');
+        search_links.forEach(link => {
+            link.style.display = "none";
+        });
+    }
+
+    function searchStock() {
+        let stock_select = document.querySelector('.stock_select');
+        let stock_inp = document.querySelector('#stock_inp');
+        let search_links = document.querySelectorAll('.search_link');
+
+        search_links.forEach(link => {
+            if (link.innerHTML.toUpperCase().indexOf(stock_inp.value.toUpperCase()) > -1) {
+                link.style.display = "block";
+            } else {
+                link.style.display = "none";
+            }
+        });
+
+    }
+
+    let header_btn = document.querySelector('.log_new_header');
+    let loading_message = document.querySelector('.loading_message');
+    let add_form = document.querySelector('.add_form');
+    header_btn.addEventListener('click', () => {
+        header_btn.classList.toggle('active');
+        loading_message.classList.toggle('show');
+
+        $.ajax({
+            url: '/api/get-form-data/issue/',
+            type: 'GET',
+            success: function(response) {
+                if (!response.hasOwnProperty('alert')) {
+                    let users = response['users'];
+                    let transaction_types = response['transaction_types'];
+                    let stock = response['stock'];
+
+                    let username_select = document.querySelector('.username_select');
+                    let type_select = document.querySelector('.type_select');
+                    let stock_select = document.querySelector('.stock_select');
+                    let search_links = document.querySelector('.search_links');
+
+                    users.forEach(user => {
+                        let option = document.createElement('option');
+                        option.setAttribute('value', user[0]);
+                        option.innerHTML = user[1];
+
+                        username_select.appendChild(option);
+                    });
+                    transaction_types.forEach(type => {
+                        let option = document.createElement('option');
+                        option.setAttribute('value', type[0]);
+                        option.innerHTML = type[1];
+
+                        type_select.appendChild(option);
+                    });
+                    stock.forEach(stock => {
+                        let search_link = document.createElement('a');
+                        search_link.setAttribute('value', stock[0]);
+                        search_link.classList.add('search_link');
+                        search_link.innerHTML = stock[1];
+                        search_link.style.display = "none"
+
+                        search_links.appendChild(search_link);
+                    });
+
+                    let stock_inp = document.querySelector('#stock_inp');
+                    stock_inp.setAttribute('onfocus', 'showSearch()');
+                    stock_inp.setAttribute('onblur', 'hideSearch()');
+                    stock_inp.setAttribute('onkeyup', 'searchStock()');
+
+                    add_form.classList.toggle('active');
+
+                } else {
+                    alert(response['alert']);
+                }
+                loading_message.classList.toggle('show');
+            }
+        });
+
+
+    });
 
 
 </script>

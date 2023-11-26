@@ -15,7 +15,7 @@
         --royal-blue-1: #536976;
         --royal-blue-2: #292e49;
     }
-    
+
     body, html {
         height: 100vh;
         margin: 0;
@@ -38,14 +38,49 @@
         background-color: #d53030;
     }
 
+    .table_nav {
+        display: flex;
+        flex-direction: row;
+
+        justify-content: center;
+        align-items: center;
+
+        margin-top: 20px;
+    
+    }
+
+    .nav_btn {
+        margin: 0 10px;
+        padding: 10px 20px;
+
+        border: none;
+
+        background-color: rgba(255, 255, 255, 0);
+
+        font-size: 16px;
+        font-weight: bold;
+    
+        transition: 0.2s;
+    }
+
+    .nav_btn:hover {
+        cursor: pointer;
+    
+        border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .nav_btn.active {
+        border-bottom: 2px solid white;
+    }
+
 </style>
 
 <body>
     {% include '_nav.html' %}
 
     <div class="table_nav">
-        <button class="user_btn">Users</button>
-        <button class="transaction_type_btn">Transaction Types</button>
+        <button class="nav_btn user_btn">Users</button>
+        <button class="nav_btn transaction_type_btn">Transaction Types</button>
     </div>
 
     <div class="table_container">
@@ -66,6 +101,7 @@
 
     let user_btn = document.querySelector('.user_btn');
     let transaction_type_btn = document.querySelector('.transaction_type_btn');
+    let active_btn = null;
 
     let table_view = document.querySelector('.table_view');
     let current_table = null;
@@ -83,7 +119,9 @@
 
     user_btn.addEventListener('click', () => {
         console.log("Fetching 'Users' table ...");
-    
+        user_btn.classList.add('active');
+        transaction_type_btn.classList.remove('active');
+
         $.ajax({
             url: '/api/get-table/users/0/10',
             type: 'GET',
@@ -95,6 +133,8 @@
 
     transaction_type_btn.addEventListener('click', () => {
         console.log("Fetching 'Transaction Types' table ...");
+        user_btn.classList.remove('active');
+        transaction_type_btn.classList.add('active');
 
         $.ajax({
             url: '/api/get-table/transaction_types/0/10',

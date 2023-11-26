@@ -11,4 +11,6 @@ urlpatterns = [
     path('getDashboard/', views.get_dash_info, name='get-dashboard'),
     path('getIssue/<int:start>/<int:quantity>/', views.get_issue, name='get-issue'),
     path('getLog/', views.get_log, name='get-log'),
+
+    path('get-form-data/<str:form>/', views.get_form_data, name='get-form-data'),
 ]

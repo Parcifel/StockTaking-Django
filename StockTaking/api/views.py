@@ -208,13 +208,40 @@ def get_issue(request, start, quantity):
     LEFT JOIN stock ON transactions.stock_id = stock.id
     WHERE transaction.transaction_type_id = 2
     """
-    query = "SELECT transactions.id, users.username, transaction_types.description, stock.description, transactions.quantity, transactions.date FROM transactions LEFT JOIN users ON transactions.user_id = users.id LEFT JOIN transaction_types ON transactions.transaction_type_id = transaction_types.id LEFT JOIN stock ON transactions.stock_id = stock.id"
+    query = "SELECT transactions.id, users.username, transaction_types.description AS transaction_type, stock.description AS stock, transactions.quantity, transactions.date FROM transactions LEFT JOIN users ON transactions.user_id = users.id LEFT JOIN transaction_types ON transactions.transaction_type_id = transaction_types.id LEFT JOIN stock ON transactions.stock_id = stock.id"
     response = _get_table_response(query=query, start=start, quantity=quantity)
     
     return response
 
 def get_log(request):
-    query = "SELECT transactions.id, users.username, transaction_types.description, stock.description, transactions.quantity, transactions.date FROM transactions LEFT JOIN users ON transactions.user_id = users.id LEFT JOIN transaction_types ON transactions.transaction_type_id = transaction_types.id LEFT JOIN stock ON transactions.stock_id = stock.id"
+    query = "SELECT transactions.id, users.username, transaction_types.description AS transaction_type, stock.description AS stock, transactions.quantity, transactions.date FROM transactions LEFT JOIN users ON transactions.user_id = users.id LEFT JOIN transaction_types ON transactions.transaction_type_id = transaction_types.id LEFT JOIN stock ON transactions.stock_id = stock.id"
     response = _get_table_response(query=query)
     
     return response
+
+def get_form_data(request, form):
+    if form == 'issue':
+        query_users = "SELECT id, username FROM users WHERE active = 1"
+        query_stock = "SELECT id, description FROM stock"
+        query_transaction_types = "SELECT id, description FROM transaction_types"
+        
+        with connection.cursor() as cursor:
+            cursor.execute(query_users)
+            users = _get_table_data(cursor)
+            
+            cursor.execute(query_stock)
+            stock = _get_table_data(cursor)
+            
+            cursor.execute(query_transaction_types)
+            transaction_types = _get_table_data(cursor)
+            
+        return JsonResponse({
+            'users': users,
+            'stock': stock,
+            'transaction_types': transaction_types
+        }, safe=False)
+        
+    else:
+        return JsonResponse({
+            'alert': f"Unknown form, {form}"    
+        }, safe=False)

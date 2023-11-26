@@ -1,3 +1,7 @@
+function capatalize(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 class Table {
     constructor(parent, table_name, headers, data) {
         this.table_name = table_name;
@@ -26,7 +30,7 @@ class Table {
         let table_head_row = document.createElement('tr');
         for (let i = 0; i < this.headers.length; i++) {
             let table_head_cell = document.createElement('th');
-            table_head_cell.innerHTML = `${this.headers[i]}`;
+            table_head_cell.innerHTML = `${capatalize(this.headers[i])}`;
             table_head_row.appendChild(table_head_cell);
         }
         table_body.appendChild(table_head_row);
