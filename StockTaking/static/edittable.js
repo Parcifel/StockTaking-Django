@@ -28,6 +28,7 @@ class EditTable {
 
         let table_body = document.createElement('tdody');
 
+        /* Header */
         let table_head_row = document.createElement('tr');
         for (let i = 0; i < this.headers.length; i++) {
             let table_head_cell = document.createElement('th');
@@ -36,6 +37,79 @@ class EditTable {
         }
         table_body.appendChild(table_head_row);
 
+        /* Add New */
+        let table_add_row = document.createElement('tr');
+        for (let i = 0; i < this.headers.length; i++) {
+            let table_add_cell = document.createElement('td');
+            let table_cell_type = this.types[i];
+            let input = null;
+
+            switch (table_cell_type) {
+                case 'int':
+                    input = document.createElement('input');
+                    input.setAttribute('type', 'number');
+                    input.classList.add('add_row_data');
+                    input.setAttribute('column', this.headers[i]);
+                    break;
+                
+                case 'str':
+                    input = document.createElement('input');
+                    input.setAttribute('type', 'text');
+                    input.classList.add('add_row_data');
+                    input.setAttribute('column', this.headers[i]);
+                    break;
+                
+                case 'bool':
+                    input = document.createElement('input');
+                    input.setAttribute('type', 'checkbox');
+                    input.classList.add('add_row_data');
+                    input.setAttribute('column', this.headers[i]);
+                    break;
+                
+                case 'date':
+                    input = document.createElement('input');
+                    input.setAttribute('type', 'date');
+                    input.classList.add('add_row_data');
+                    input.setAttribute('column', this.headers[i]);
+                    break;
+                
+                case 'datetime':
+                    input = document.createElement('input');
+                    input.setAttribute('type', 'datetime-local');
+                    input.classList.add('add_row_data');
+                    input.setAttribute('column', this.headers[i]);
+                    break;
+                
+                case 'float':
+                    input = document.createElement('input');
+                    input.setAttribute('type', 'number');
+                    input.classList.add('add_row_data');
+                    input.setAttribute('column', this.headers[i]);
+                    break;
+                
+                case 'id':
+                    input = document.createElement('input');
+                    input.setAttribute('type', 'submit');
+                    input.setAttribute('value', 'Add');
+                    input.classList.add('add_row_submit');
+                    input.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        this.addNewRow();
+                    });
+                    break;
+                
+                default:
+                    input_type = 'text';
+                    break;
+            }
+            
+            table_add_cell.appendChild(input);
+
+            table_add_row.appendChild(table_add_cell);
+        }
+        table_body.appendChild(table_add_row);
+
+        /* Table Data */
         for (let row=0; row<this.data.length; row++) {
             let table_body_row = document.createElement('tr');
             let row_id = this.data[row][0];
@@ -254,5 +328,54 @@ class EditTable {
                 }
             }
         })
+    }
+
+    addNewRow() {
+        let arr_row_inputs = document.querySelectorAll('.add_row_data');
+
+        console.log(arr_row_inputs);
+
+        let data = {};
+        for (let i = 0; i < arr_row_inputs.length; i++) {
+            let input = arr_row_inputs[i];
+            let column = input.getAttribute('column');
+            let input_value = null
+
+            if (input.type == 'checkbox') {
+                if (input.checked) {
+                    input_value = 1;
+                }
+                else {
+                    input_value = 0;
+                }
+            } else {
+                input_value = input.value;
+            }
+
+            data[column] = input_value;
+        }
+
+        $.ajax({
+            headers: { "X-CSRFToken": csrf_token },
+            url: `/api/add/${this.table_name}/`,
+            type: 'POST',
+            data: data,
+            success: function(response) {
+                console.log(response);
+            }
+        })
+
+        for (let i = 0; i < arr_row_inputs.length; i++) {
+            let input = arr_row_inputs[i];
+            
+            if (input.type == 'checkbox') {
+                input.checked = false;
+            } else {
+                input.value = "";
+            }
+        }
+
+        // TODO: Get data of table again
+        this.draw_table_view();
     }
 }

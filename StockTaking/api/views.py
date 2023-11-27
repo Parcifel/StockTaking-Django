@@ -14,6 +14,27 @@ def dictfetchall(cursor):
         for row in cursor.fetchall()
     ]
     
+def _table_add_row(table_name, headers, data):
+    header_line = ', '.join(headers)
+    
+    for header in headers:
+        if header == 'id':
+            continue
+        
+        if header == 'active':
+            if data[header] == '0':
+                data[header] = 0
+            else:
+                data[header] = 1
+    
+    data_line = ', '.join([f"{data[header]}" if type(data[header])==int else f"'{data[header]}'" for header in headers])
+    
+    query = f"INSERT INTO {table_name} ({header_line}) VALUES ({data_line})"
+    
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        
+    
 def _get_table_headers(cursor):
     column_headers = [col[0] for col in cursor.description]
         
@@ -373,4 +394,35 @@ def log_transaction(user_id, transaction_type_id, stock_id, quantity):
     with connection.cursor() as cursor:
         cursor.execute(query)
         
+    return JsonResponse({}, safe=False)
+
+def add_row(request, table_name):
+    if request.method != 'POST':
+        return JsonResponse({
+            'alert': "Invalid request method."
+        }, safe=False)
+        
+    data = request.POST
+    
+    with connection.cursor() as cursor:
+        query = f"SELECT * FROM {table_name}"
+        cursor.execute(query)
+        headers = _get_table_headers(cursor)
+        
+    headers.remove('id')
+        
+    row_data = {}
+    for header in headers:
+        if header == 'id':
+            continue
+        
+        if header not in data:
+            return JsonResponse({
+                'alert': f"Missing data for {header}."
+            }, safe=False)
+        
+        row_data[header] = data[header]   
+    
+    _table_add_row(table_name, headers, row_data)
+   
     return JsonResponse({}, safe=False)
