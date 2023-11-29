@@ -131,12 +131,18 @@
         width: max-content;
     }
     
-    .alert_message {
+    .log_message {
         display: none;
     }
 
-    .alert_message.alert {
+    .log_message.alert {
         display: block;
+    }
+
+    .page_nav a.active_page {
+        text-decoration: underline;
+        color: white;
+        font-weight: bold;
     }
 
 </style>
@@ -153,7 +159,7 @@
         <h3 class="log_new_header">Log New Transaction</h3>
 
         <h4 class="loading_message">Loading ...</h4>
-        <h4 class="alert_message"></h4>
+        <h4 class="log_message"></h4>
 
         <form method="post" class="add_form">
             <label for="username">User: </label>
@@ -185,16 +191,23 @@
 <script src="{% static 'table.js' %}"></script>
 <script>
 
-    let alert_message = document.querySelector('.alert_message');
+    let log_message = document.querySelector('.log_message');
     let table_view = document.querySelector('.table_view');
 
+    /* LOAD TABLE */
     function loadTable(start=0, quantity=10) {
         $.ajax({
-            url: `/api/getIssue/${start}/${quantity}/`,
+            url: `/api/get/issue/${start}/${quantity}/`,
             type: "GET",
             success: function(response) {
-                let headers = response['headers'];
-                let data = response['data'];
+                if (response['success'] == false) {
+                    alertMessage(response['alert']);
+                    return
+                }
+                let response_data = response['data'];
+
+                let headers = response_data['headers'];
+                let data = response_data['data'];
 
                 let table = new Table(table_view, 'issue', headers, data);
             }
@@ -202,11 +215,11 @@
     }
 
     loadTable();
-
+    
     function alertMessage(msg) {
-        alert_message.classList.add('alert');
-        alert_message.innerHTML = ""
-        alert_message.innerHTML = msg;
+        log_message.classList.add('alert');
+        log_message.innerHTML = ""
+        log_message.innerHTML = msg;
     }
 
     // Load Page navigations
@@ -222,11 +235,24 @@
 
         page.addEventListener('click', (e) => {
             e.preventDefault();
+            
+            let active_page = document.querySelector('.active_page');
+            if (active_page) {
+                active_page.classList.remove('active_page');
+            }
+            page.classList.add('active_page');
+
             loadTable(i * transactions_per_page, transactions_per_page);
         });
 
         page_nav.appendChild(page);
+
+        if (i == 0) {
+            page.classList.add('active_page');
+        }
     }
+
+
 
 /*
     function showSearch() {
@@ -259,8 +285,8 @@
                 link.style.display = "none";
             }
         });
-
-    }*/
+    }
+*/
 
     let header_btn = document.querySelector('.log_new_header');
     let loading_message = document.querySelector('.loading_message');
@@ -268,74 +294,77 @@
     header_btn.addEventListener('click', () => {
         header_btn.classList.toggle('active');
         loading_message.classList.toggle('show');
-        alert_message.classList.remove('alert');
+        log_message.classList.remove('alert');
 
         $.ajax({
-            url: '/api/get-form-data/issue/',
+            url: '/api/get/form/issue/',
             type: 'GET',
             success: function(response) {
-                if (!response.hasOwnProperty('alert')) {
-                    let users = response['users'];
-                    let transaction_types = response['transaction_types'];
-                    let stock = response['stock'];
-
-                    let username_select = document.querySelector('.username_select');
-                    let type_select = document.querySelector('.type_select');
-                    let stock_select = document.querySelector('.stock_select');
-
-                    username_select.innerHTML = "";
-                    type_select.innerHTML = "";
-                    stock_select.innerHTML = "";
-
-                    users.forEach(user => {
-                        let option = document.createElement('option');
-                        option.setAttribute('value', user[0]);
-                        option.innerHTML = user[1];
-
-                        username_select.appendChild(option);
-                    });
-                    transaction_types.forEach(type => {
-                        let option = document.createElement('option');
-                        option.setAttribute('value', type[0]);
-                        option.innerHTML = type[1];
-
-                        type_select.appendChild(option);
-                    });
-                    stock.forEach(stock => {
-                        let search_link = document.createElement('option');
-                        search_link.setAttribute('value', stock[0]);
-                        search_link.classList.add('search_link');
-                        search_link.innerHTML = stock[1];
-                        // search_link.style.display = "none";
-
-                        stock_select.appendChild(search_link);
-                    });
-
-                    /*
-                    let stock_inp = document.querySelector('#stock_inp');
-                    stock_inp.setAttribute('onfocus', 'showSearch()');
-                    stock_inp.setAttribute('onblur', 'hideSearch()');
-                    stock_inp.setAttribute('onkeyup', 'searchStock()');
-                    stock_inp.value = "";
-                    */
-
-                    let quantity_inp = document.querySelector('#quantity');
-                    quantity_inp.value = "";
-
-                    add_form.classList.toggle('active');
-
-                } else {
+                if (response['success'] == false) {
                     alertMessage(response['alert']);
-                    
+                    loading_message.classList.toggle('show');
+                    return
                 }
+
+                let response_data = response['data'];
+
+                let users = response_data['users'];
+                let transaction_types = response_data['transaction_types'];
+                let stock = response_data['stock'];
+
+                let username_select = document.querySelector('.username_select');
+                let type_select = document.querySelector('.type_select');
+                let stock_select = document.querySelector('.stock_select');
+
+                username_select.innerHTML = "";
+                type_select.innerHTML = "";
+                stock_select.innerHTML = "";
+
+                users.forEach(user => {
+                    let option = document.createElement('option');
+                    option.setAttribute('value', user[0]);
+                    option.innerHTML = user[1];
+
+                    username_select.appendChild(option);
+                });
+                transaction_types.forEach(type => {
+                    let option = document.createElement('option');
+                    option.setAttribute('value', type[0]);
+                    option.innerHTML = type[1];
+
+                    type_select.appendChild(option);
+                });
+                stock.forEach(stock => {
+                    let search_link = document.createElement('option');
+                    search_link.setAttribute('value', stock[0]);
+                    search_link.classList.add('search_link');
+                    search_link.innerHTML = stock[1];
+                    // search_link.style.display = "none";
+
+                    stock_select.appendChild(search_link);
+                });
+
+                /*
+                let stock_inp = document.querySelector('#stock_inp');
+                stock_inp.setAttribute('onfocus', 'showSearch()');
+                stock_inp.setAttribute('onblur', 'hideSearch()');
+                stock_inp.setAttribute('onkeyup', 'searchStock()');
+                stock_inp.value = "";
+                */
+
+                let quantity_inp = document.querySelector('#quantity');
+                quantity_inp.value = "";
+
+                add_form.classList.toggle('active');
                 loading_message.classList.toggle('show');
             }
         });
     });
 
+
     let submit_btn = document.querySelector('.add_submit');
     submit_btn.addEventListener('click', (e) => {
-        alert_message.classList.remove('alert');
+        log_message.classList.remove('alert');
         e.preventDefault();
 
         let username_select = document.querySelector('.username_select');
@@ -366,26 +395,31 @@
 
         console.log(`${user_index} ${type_index} ${stock} ${quantity}`);
         /* SEND DATA */
+        data = {
+            'user_id': user_index,
+            'transaction_type_id': type_index,
+            'stock_id': stock,
+            'quantity': quantity
+        }
+
         $.ajax({
-            url: `/api/add-transaction/${user_index}/${type_index}/${stock}/${quantity}/`,
-            type: 'GET',
+            url: `/api/log/new/`,
+            type: 'POST',
+            data: data,
+            headers: {"X-CSRFToken": "{{ csrf_token }}"},
             success: function(response) {
-                if (!response.hasOwnProperty('alert')) {
-                    alertMessage("Transaction added successfully.");
-                    loadTable();
-                } else {
-                    alertMessage(response['alert']);
+                if (response['success'] == false) {
+                    alertMessage(response['message']);
+                    return
                 }
             }
         });
 
         /* LOAD NEW TABLE */
-
         header_btn.classList.toggle('active');
         add_form.classList.toggle('active');
 
     })
-
 
 </script>
 

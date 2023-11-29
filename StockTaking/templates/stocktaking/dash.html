@@ -44,11 +44,17 @@
 
     function loadTable() {
         $.ajax({
-            url: "/api/getDashboard/",
+            url: "/api/get/dashboard/",
             type: "GET",
             success: function(response) {
-                let headers = response['headers'];
-                let data = response['data'];
+                if (response['success'] == false) {
+                    alert(response['message']);
+                    return;
+                }
+                response_data = response['data'];
+
+                let headers = response_data['headers'];
+                let data = response_data['data'];
 
                 let table = new Table(table_view, 'stock', headers, data);
             }

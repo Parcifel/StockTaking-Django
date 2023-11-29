@@ -73,6 +73,11 @@
         border-bottom: 2px solid white;
     }
 
+    tbody {
+        overflow: auto;
+        height: 500px;
+    }
+
 </style>
 
 <body>
@@ -87,9 +92,7 @@
         <div class="table_view">
 
         </div>
-        <div class="table_add">
-
-        </div>
+        <div class="page_nav"></div>
     </div>
 
 </body>
@@ -105,6 +108,23 @@
 
     let table_view = document.querySelector('.table_view');
     let current_table = null;
+    let page_nav = document.querySelector('.page_nav');
+
+    function loadTable(table_name) {
+        $.ajax({
+            url: `/api/select/${table_name}/`,
+            type: 'GET',
+            success: function(response) {
+                if (response['success'] == false) {
+                    alert(response['message']);
+                    return;
+                }
+
+                let response_data = response['data'];
+                current_table = new EditTable(table_view, table_name, response_data['headers'], response_data['types'], response_data['data']);
+            }
+        })
+    }
 
     window.addEventListener('click', (e) => {
         if (current_table) {
@@ -122,13 +142,7 @@
         user_btn.classList.add('active');
         transaction_type_btn.classList.remove('active');
 
-        $.ajax({
-            url: '/api/get-table/users/0/10',
-            type: 'GET',
-            success: function(response) {
-                current_table = new EditTable(table_view, 'users', response['headers'], response['types'], response['data']);
-            }
-        })
+        loadTable('users');
     });
 
     transaction_type_btn.addEventListener('click', () => {
@@ -136,14 +150,10 @@
         user_btn.classList.remove('active');
         transaction_type_btn.classList.add('active');
 
-        $.ajax({
-            url: '/api/get-table/transaction_types/0/10',
-            type: 'GET',
-            success: function(response) {
-                current_table = new EditTable(table_view, 'transaction_types', response['headers'], response['types'], response['data']);
-            }
-        })
+        loadTable('transaction_types');
     });
+
+
 
 
 </script>
