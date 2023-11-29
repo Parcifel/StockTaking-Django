@@ -9,4 +9,4 @@ COPY requirements.txt /app/
 RUN pip install -r requirements.txt
 
 COPY ./StockTaking/ /app/
-COPY ./config.ini /app/StockTaking/
+COPY ./configfile /app/StockTaking/config.ini
