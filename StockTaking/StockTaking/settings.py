@@ -153,3 +153,12 @@ STATICFILES_DIRS = (
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# SESSIONS
+# close on browser close
+# expire after 20 minutes of inactivity
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 20 * 60  # 20 minutes
+# SESSION_COOKIE_AGE = 10 # 10 seconds for testing
+SESSION_SAVE_EVERY_REQUEST = True

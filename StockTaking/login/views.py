@@ -1,21 +1,6 @@
 from django.shortcuts import render, redirect
 from django.db import connection
 
-temp_users = [
-    {
-        "username": "admin",
-        "password": "admin",
-    },
-    {
-        "username": "user",
-        "password": "user",
-    },
-    {
-        "username": "test",
-        "password": "test",
-    },
-]
-
 def dictfetchall(cursor):
     "Return all rows from a cursor as a dict"
     columns = [col[0] for col in cursor.description]
@@ -26,6 +11,8 @@ def dictfetchall(cursor):
 
 # Create your views here.
 def login(request):
+    request.session.flush()
+    
     if request.method == 'POST':
         # Unknown request
         if 'username' not in request.POST or 'password' not in request.POST:
@@ -55,6 +42,10 @@ def login(request):
             if response[0]['password'] != data['password']:
                 return render(request, 'login/login.html', {'message': 'Username or password is incorrect.'})
             
+            request.session['username'] = data['username']
+            request.session['password'] = data['password']
+            request.session['logged_in'] = True
+            
             return redirect('home')
             
         
@@ -62,4 +53,6 @@ def login(request):
 
 
 def logout(request):
+    return redirect('login')
+    
     return render(request, 'login/logout.html')

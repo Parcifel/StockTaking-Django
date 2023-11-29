@@ -1,8 +1,18 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.db import connection
 import datetime
 import math
+from time import sleep
+
+def auth_required(func):
+    def wrapper(request, *args, **kwargs):
+        if 'logged_in' not in request.session or request.session['logged_in'] == False:
+            return redirect('login')
+        
+        return func(request, *args, **kwargs)
+    
+    return wrapper
 
 def response_obj(success=False, message="", data={}):
     """This function returns a generic response object.
@@ -482,7 +492,7 @@ def _get_table_response(table_name=None, start=None, quantity=None, query=None):
 # ##############################################################################################################################################################
 
 
-
+@auth_required
 def insert(request, table_name):
     """This function will insert a new row into the table specified by table_name.
     method: POST
@@ -527,7 +537,7 @@ def insert(request, table_name):
     
     return JsonResponse(response, safe=False)
     
-
+@auth_required
 def newLog(request):
     response = response_obj()
     
@@ -621,7 +631,7 @@ def newLog(request):
     
     return JsonResponse(response, safe=False)
     
-
+@auth_required
 def update(request, table_name):
     """This function will update a table element. This is mainly used by the EditTable component.
     method: POST
@@ -711,7 +721,7 @@ def update(request, table_name):
         response['message'] = "Could not update table element."
         return JsonResponse(response, safe=False)
 
-
+@auth_required
 def getDashboard(request):
     """This function will return the data needed to lead the dashboard page.
     method: GET
@@ -737,7 +747,7 @@ def getDashboard(request):
 
     return JsonResponse(response, safe=False)
 
-
+@auth_required
 def getIssue(request, start, quantity):
     """This function will return the data needed to load the issue page table.
     This table is paginated.
@@ -776,7 +786,7 @@ def getIssue(request, start, quantity):
     
     return JsonResponse(_get_table_response(query=query, start=start, quantity=quantity), safe=False)
     
-    
+@auth_required   
 def getLogs(request):
     """This function will return the entire log table.
     method: GET
@@ -799,7 +809,7 @@ def getLogs(request):
     
     return JsonResponse(_get_table_response(query=query), safe=False)
 
-
+@auth_required
 def getForm(request, form):
     """Thisfunction will return all the data needed to load a form.
 
@@ -839,7 +849,7 @@ def getForm(request, form):
         
         return JsonResponse(response, safe=False)
     
-
+@auth_required
 def getTable(request, table_name, start, quantity):
     response = _get_table_response(table_name=table_name, start=start, quantity=quantity)
     return JsonResponse(response, safe=False)
