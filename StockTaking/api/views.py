@@ -781,7 +781,8 @@ def getIssue(request, start, quantity):
         "FROM transactions " +
         "LEFT JOIN users ON transactions.user_id = users.id " +
         "LEFT JOIN transaction_types ON transactions.transaction_type_id = transaction_types.id " +
-        "LEFT JOIN stock ON transactions.stock_id = stock.id"
+        "LEFT JOIN stock ON transactions.stock_id = stock.id " +
+        "ORDER BY transactions.date DESC"
     )
     
     return JsonResponse(_get_table_response(query=query, start=start, quantity=quantity), safe=False)

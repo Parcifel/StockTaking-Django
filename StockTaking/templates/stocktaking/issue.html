@@ -411,11 +411,13 @@
                 if (response['success'] == false) {
                     alertMessage(response['message']);
                     return
-                }
+                } 
+                let current_page_number = document.querySelector('.active_page').innerHTML;
+                table_view.innerHTML = "";
+                loadTable(start=(current_page_number - 1) * transactions_per_page, quantity=transactions_per_page);
             }
         });
 
-        /* LOAD NEW TABLE */
         header_btn.classList.toggle('active');
         add_form.classList.toggle('active');
 
