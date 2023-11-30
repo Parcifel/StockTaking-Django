@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# This script is used to build the project.
+echo "Sudo password required for docker-compose..."
+sudo echo "Sudo password accepted."
+
+## Create ini file for the project
+echo "Moving config file..."
+cp setup_files/configfile StockTaking/config.ini
+echo "Config file moved."
+
+
+## Start docker containers
+echo "Starting docker containers..."
+sudo docker-compose up -d
+echo "Docker containers started."
+
+
+## Create database test data
+echo "Do you want to create Database test Data? (y/n)"
+read answer
+
+if [ "$answer" != "${answer#[Yy]}" ] ;then
+    echo "Creating Database test data..."
+    echo "..."
+    echo "Database test data created."
+else
+    echo "Database test data not created."
+fi

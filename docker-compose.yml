@@ -1,25 +1,30 @@
 version: '1.1'
 services:
   db:
-    image: mysql:5.7
+    image: mysql:8.2
     ports:
       - "3308:3306"
     volumes:
       - /tmp/app/mysqld:/var/run/mysqld
       - ./data:/var/lib/mysql
+      - ./setup_files/db_setup.sql:/docker-entrypoint-initdb.d/db_setup.sql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: 'stocktaking-123'
       MYSQL_DATABASE: 'stocktaking'
-      MYSQL_USER: 'normuser'
+      MYSQL_USER: 'root'
       MYSQL_PASSWORD: 'stocktaking-123'
+      MYSQL_ROOT_PASSWORD: 'stocktaking-123'
+      MYSQL_HOST: ''
+    command: --init-file /docker-entrypoint-initdb.d/db_setup.sql
   web:
     build: .
     command: python StockTaking/manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
-    volumes:
+    volumes: 
       - .:/app
       - /tmp/app/mysqld:/run/mysqld
     depends_on:
+      - db
+    links: 
       - db

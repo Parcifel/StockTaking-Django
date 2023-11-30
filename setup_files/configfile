@@ -1,6 +1,6 @@
 [database]
 database=stocktaking
-user=normuser
+user=root
 password=stocktaking-123
-host=localhost
+host=db
 port=3306
