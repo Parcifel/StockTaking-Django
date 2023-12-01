@@ -16,6 +16,7 @@ def login(request):
     if request.method == 'POST':
         # Unknown request
         if 'username' not in request.POST or 'password' not in request.POST:
+            print(request.POST)
             return render(request, 'login/login.html', {'message': 'Unknown POST request sent to server. Please try again.'})
         
         data = {
