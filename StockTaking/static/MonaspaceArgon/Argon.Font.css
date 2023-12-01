@@ -1,0 +1,128 @@
+
+@font-face {
+    font-family: "Argon";
+    src: url("fonts/MonaspaceArgon-Regular.woff");
+}
+
+@font-face {
+    font-family: "Argon";
+    src: url("fonts/MonaspaceArgon-Bold.woff");
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "Argon";
+    src: url("fonts/MonaspaceArgon-Italic.woff");
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Argon";
+    src: url("fonts/MonaspaceArgon-BoldItalic.woff");
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Argon";
+    src: url("fonts/MonaspaceArgon-Light.woff");
+    font-weight: 300;
+}
+
+@font-face {
+    font-family: "Argon";
+    src: url("fonts/MonaspaceArgon-LightItalic.woff");
+    font-weight: 300;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Argon";
+    src: url("fonts/MonaspaceArgon-ExtraLight.woff");
+    font-weight: 200;
+}
+
+@font-face {
+    font-family: "Argon";
+    src: url("fonts/MonaspaceArgon-ExtraLightItalic.woff");
+    font-weight: 200;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Argon";
+    src: url("fonts/MonaspaceArgon-Thin.woff");
+    font-weight: 100;
+}
+
+@font-face {
+    font-family: "Argon";
+    src: url("fonts/MonaspaceArgon-ThinItalic.woff");
+    font-weight: 100;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Argon";
+    src: url("fonts/MonaspaceArgon-Black.woff");
+    font-weight: 900;
+}
+
+@font-face {
+    font-family: "Argon";
+    src: url("fonts/MonaspaceArgon-BlackItalic.woff");
+    font-weight: 900;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Argon";
+    src: url("fonts/MonaspaceArgon-ExtraBold.woff");
+    font-weight: 800;
+}
+
+@font-face {
+    font-family: "Argon";
+    src: url("fonts/MonaspaceArgon-ExtraBoldItalic.woff");
+    font-weight: 800;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Argon";
+    src: url("fonts/MonaspaceArgon-SemiBold.woff");
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: "Argon";
+    src: url("fonts/MonaspaceArgon-SemiBoldItalic.woff");
+    font-weight: 600;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Argon";
+    src: url("fonts/MonaspaceArgon-Medium.woff");
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: "Argon";
+    src: url("fonts/MonaspaceArgon-MediumItalic.woff");
+    font-weight: 500;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Argon";
+    src: url("fonts/MonaspaceArgon-Regular.woff");
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: "Argon";
+    src: url("fonts/MonaspaceArgon-RegularItalic.woff");
+    font-weight: 400;
+    font-style: italic;
+}

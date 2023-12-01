@@ -1,0 +1,128 @@
+
+@font-face {
+    font-family: "Xenon";
+    src: url("fonts/MonaspaceXenon-Regular.woff");
+}
+
+@font-face {
+    font-family: "Xenon";
+    src: url("fonts/MonaspaceXenon-Bold.woff");
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "Xenon";
+    src: url("fonts/MonaspaceXenon-Italic.woff");
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Xenon";
+    src: url("fonts/MonaspaceXenon-BoldItalic.woff");
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Xenon";
+    src: url("fonts/MonaspaceXenon-Light.woff");
+    font-weight: 300;
+}
+
+@font-face {
+    font-family: "Xenon";
+    src: url("fonts/MonaspaceXenon-LightItalic.woff");
+    font-weight: 300;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Xenon";
+    src: url("fonts/MonaspaceXenon-ExtraLight.woff");
+    font-weight: 200;
+}
+
+@font-face {
+    font-family: "Xenon";
+    src: url("fonts/MonaspaceXenon-ExtraLightItalic.woff");
+    font-weight: 200;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Xenon";
+    src: url("fonts/MonaspaceXenon-Thin.woff");
+    font-weight: 100;
+}
+
+@font-face {
+    font-family: "Xenon";
+    src: url("fonts/MonaspaceXenon-ThinItalic.woff");
+    font-weight: 100;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Xenon";
+    src: url("fonts/MonaspaceXenon-Black.woff");
+    font-weight: 900;
+}
+
+@font-face {
+    font-family: "Xenon";
+    src: url("fonts/MonaspaceXenon-BlackItalic.woff");
+    font-weight: 900;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Xenon";
+    src: url("fonts/MonaspaceXenon-ExtraBold.woff");
+    font-weight: 800;
+}
+
+@font-face {
+    font-family: "Xenon";
+    src: url("fonts/MonaspaceXenon-ExtraBoldItalic.woff");
+    font-weight: 800;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Xenon";
+    src: url("fonts/MonaspaceXenon-SemiBold.woff");
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: "Xenon";
+    src: url("fonts/MonaspaceXenon-SemiBoldItalic.woff");
+    font-weight: 600;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Xenon";
+    src: url("fonts/MonaspaceXenon-Medium.woff");
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: "Xenon";
+    src: url("fonts/MonaspaceXenon-MediumItalic.woff");
+    font-weight: 500;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Xenon";
+    src: url("fonts/MonaspaceXenon-Regular.woff");
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: "Xenon";
+    src: url("fonts/MonaspaceXenon-RegularItalic.woff");
+    font-weight: 400;
+    font-style: italic;
+}

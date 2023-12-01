@@ -1,17 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'MonaspaceArgon/Argon.Font.css' %}">
+    <link rel="stylesheet" href="{% static 'MonaspaceXenon/Xenon.Font.css' %}">
     <title>Login</title>
-    {% load static %}
 </head>
 
 <style>
 
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-body: #0f0f0f;
+        --bg-card: #dfdcdc;
+        --shadow: rgba(223, 220, 220, 0.4);
+
+        --bg-button: #0f0f0f;
+        --button-color: #dfdcdc;
+
+        --secondary: #525252;
+
+        --font-color-primary: #0f0f0f;
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        --bg-body: #dfdcdc;
+        --bg-card: #0f0f0f;
+
+        --bg-button: #dfdcdc;
+        --button-color: #0f0f0f;
+
+        --secondary: #aaaaaa;
+
+        --font-color-primary: #dfdcdc;
+    }
+}
+
 :root {
-    --royal-blue-1: #536976;
-    --royal-blue-2: #292e49;
+    --primary: #FF881B;
+
+    --font-family-primary: 'Argon';
 }
 
 html, body {
@@ -19,7 +51,8 @@ html, body {
     padding: 0;
     height: 100%;
     width: 100%;
-    background: linear-gradient(135deg, var(--royal-blue-1), var(--royal-blue-2) );
+    background-color: var(--bg-body);
+    /*background: linear-gradient(135deg, var(--royal-blue-1), var(--royal-blue-2) );*/
 }
 
 form {
@@ -27,7 +60,7 @@ form {
     justify-content: center;
     height: 70%;
 
-    padding-top: 10%;
+    padding-top: 5%;
 
 }
 
@@ -40,12 +73,19 @@ form {
     max-width: 500px;
     height: min-content;
 
+    background-color: var(--bg-card);
+    border-radius: 10px;
+    box-shadow: rgba(76, 109, 114, 0.3);
+    /*
     border: 1px solid rgba(160, 232, 246, 0.6);
     border-radius: 20px;
     background-color: rgba(190, 187, 187, 0.55);
     box-shadow: 0 0 10px 5px rgba(76, 109, 114, 0.3);
 
     backdrop-filter: blur(10px);
+    */
+
+    box-shadow: 5px 5px 20px , -5px -5px 20px var(--shadow);
 
 }
 
@@ -62,13 +102,12 @@ form {
     margin-bottom: 5%;
 
     background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
     border-radius: 5px;
 
     justify-content: center;
     align-items: center;
 }
-
+/*
 .username-container {
     width: 70%;
 }
@@ -97,21 +136,83 @@ form {
     width: 60%;
     height: 20%;
     float: right;
+}*/
+
+.input-container {
+    width: 70%;
+    position: relative;
+    font-size: 1rem;
+    padding: 1rem;
 }
 
+.input-container .input {
+    all: unset;
+    width: calc(100% - 1.5rem - 4px);
+    color: var(--font-color-primary);
+    padding: 0.75rem;
+    border: 2px solid var(--secondary);
+    border-radius: 5px;
+    transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.input-container .label {
+    position: absolute;
+    top: 1.9rem;
+    left: 1.9rem;
+    color: var(--font-color-primary);
+    pointer-events: none;
+    transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.input-container .input:focus {
+    border: 2px solid var(--primary);
+    color: var(--font-color-primary);
+}
+
+.input-container .input:is(:focus, :valid) ~ .label {
+    transform: translateY(-120%) scale(0.9);
+    background-color: var(--bg-card);
+    padding-inline: 0.3rem;
+}
+
+.input-container .input:valid ~ .label {
+    color: var(--secondary);
+}
+.input-container .input:focus ~ .label {
+    color: var(--primary);
+}
+
+
 .submit-button {
-    margin: 20px 0;
+    margin-top: 1rem;
+    margin-bottom: 3rem;
+    padding: 0.5rem;
 
-    height: 25px;
-    aspect-ratio: 3/1;
+    width: 60%;
+    aspect-ratio: 7/1;
 
-    background-color: white;
+    background-color: var(--bg-button);
+    color: var(--button-color);
 
-    font-size: 15px;
+    font-size: 1rem;
+    font-weight: bold;
 
     border: none;
     border-radius: 5px;
 
+}
+
+.submit-button:disabled {
+    background-color: var(--secondary);
+    color: var(--button-color);
+}
+
+.submit-button:hover:not(:disabled){
+    background-color: var(--primary);
+    color: var(--font-color-primary);
+    cursor: pointer;
+
+    transition: background-color 0.2s ease-in-out;
 }
 
 </style>
@@ -127,17 +228,17 @@ form {
                 {% endif %}
             </div>
         
-            <div class="username-container">
-                <label for="username">Username: </label>
-                <input type="text" name="username" id="username">
+            <div class="username-container input-container">
+                <input class='input' type="text" id="username" required>
+                <label class="label" for="username">Username</label>
             </div>
 
-            <div class="password-container">
-                <label for="password">Password: </label>
-                <input type="password" name="password" id="password">
+            <div class="password-container input-container">
+                <input class="input" type="password" id="password" required>
+                <label class="label" for="password">Password</label>
             </div>
 
-            <button type="submit" class="submit-button">
+            <button type="submit" class="submit-button" disabled>
                 Login
             </button>
 
@@ -157,6 +258,29 @@ form {
     else {
         alert_area.style.display = "flex";
     }
+
+    let username_inp = document.querySelector("#username");
+    let password_inp = document.querySelector("#password");
+
+    let submit_button = document.querySelector(".submit-button");
+
+    function check_input() {
+        if (username_inp.value.length > 0 && password_inp.value.length > 0) {
+            submit_button.disabled = false;
+        }
+        else {
+            submit_button.disabled = true;
+        }
+    }
+
+    username_inp.addEventListener("input", () => {
+        check_input();
+    });
+
+    password_inp.addEventListener("input", () => {
+        check_input();
+    });
+
 </script>
 
 </html>
