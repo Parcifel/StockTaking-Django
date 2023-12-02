@@ -22,104 +22,60 @@ class EditTable {
     draw_table_view() {
         this.table_container.innerHTML = '';
 
+        // Create Table Elements
         this.table = document.createElement('table');
+        let table_head = document.createElement('thead');
+        let table_body = document.createElement('tbody');
+        
         this.table.classList.add('table');
         this.table.classList.add(this.table_name);
 
-        let table_body = document.createElement('tdody');
-
-        /* Header */
+        /* Construct Header Row */
         let table_head_row = document.createElement('tr');
-        for (let i = 0; i < this.headers.length; i++) {
+        this.headers.forEach(header => {
             let table_head_cell = document.createElement('th');
-            table_head_cell.innerHTML = `${capatalize(this.headers[i])} : ${this.types[i]}`;
+            table_head_cell.innerHTML = `${capatalize(header)}`;
             table_head_row.appendChild(table_head_cell);
-        }
-        table_body.appendChild(table_head_row);
+        });
+        table_head.appendChild(table_head_row);
 
-        /* Add New */
+        /* Add New Row */
         let table_add_row = document.createElement('tr');
-        for (let i = 0; i < this.headers.length; i++) {
+        this.headers.forEach((header, index) => {
             let table_add_cell = document.createElement('td');
-            let table_cell_type = this.types[i];
+            let table_cell_type = this.types[index];
             let input = null;
 
-            switch (table_cell_type) {
-                case 'int':
-                    input = document.createElement('input');
-                    input.setAttribute('type', 'number');
-                    input.classList.add('add_row_data');
-                    input.setAttribute('column', this.headers[i]);
-                    break;
-                
-                case 'str':
-                    input = document.createElement('input');
-                    input.setAttribute('type', 'text');
-                    input.classList.add('add_row_data');
-                    input.setAttribute('column', this.headers[i]);
-                    break;
-                
-                case 'bool':
-                    input = document.createElement('input');
-                    input.setAttribute('type', 'checkbox');
-                    input.classList.add('add_row_data');
-                    input.setAttribute('column', this.headers[i]);
-                    break;
-                
-                case 'date':
-                    input = document.createElement('input');
-                    input.setAttribute('type', 'date');
-                    input.classList.add('add_row_data');
-                    input.setAttribute('column', this.headers[i]);
-                    break;
-                
-                case 'datetime':
-                    input = document.createElement('input');
-                    input.setAttribute('type', 'datetime-local');
-                    input.classList.add('add_row_data');
-                    input.setAttribute('column', this.headers[i]);
-                    break;
-                
-                case 'float':
-                    input = document.createElement('input');
-                    input.setAttribute('type', 'number');
-                    input.classList.add('add_row_data');
-                    input.setAttribute('column', this.headers[i]);
-                    break;
-                
-                case 'id':
-                    input = document.createElement('input');
-                    input.setAttribute('type', 'submit');
-                    input.setAttribute('value', 'Add');
-                    input.classList.add('add_row_submit');
-                    input.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        this.addNewRow();
-                    });
-                    break;
-                
-                default:
-                    input_type = 'text';
-                    break;
+            if (table_cell_type == 'id') {
+                input = document.createElement('input');
+                input.setAttribute('type', 'submit');
+                input.setAttribute('value', 'Add');
+                input.classList.add('add_row_submit');
+                input.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.addNewRow();
+                });
+            } else {
+                input = this.getInput(table_cell_type, header);
+                input.classList.add('add_row_data');
             }
-            
-            table_add_cell.appendChild(input);
 
+            table_add_cell.appendChild(input);
             table_add_row.appendChild(table_add_cell);
-        }
+        });
         table_body.appendChild(table_add_row);
 
-        /* Table Data */
-        for (let row=0; row<this.data.length; row++) {
+        /* Construct Table Body */
+        this.data.forEach(row => {
             let table_body_row = document.createElement('tr');
-            let row_id = this.data[row][0];
+            let row_id = row[0];
 
-            for (let col=0; col<this.headers.length; col++) {
+            this.headers.forEach((header, index) => {
                 let table_body_cell = document.createElement('td');
-                
-                let cell_name = this.headers[col];
-                let cell_type = this.types[col];
-                let cell_value = this.data[row][col];
+
+                let cell_name = header;
+                let cell_type = this.types[index];
+                let cell_value = row[index];
 
                 table_body_cell.innerHTML = cell_value;
                 table_body_cell.setAttribute('data-id', row_id);
@@ -129,19 +85,20 @@ class EditTable {
 
                 if (cell_name != 'id') {
                     table_body_cell.addEventListener('dblclick', (e) => {
-                        if (!this.inEditing(e.target)) {
-                            this.startEditing(e.target);
+                        if (!this.inEditing(table_body_cell)) {
+                            this.startEditing(table_body_cell);
                         }
                     })  
                 }
-                
 
                 table_body_row.appendChild(table_body_cell);
-            }
+            });
             table_body.appendChild(table_body_row);
-        }
+        });
 
+        this.table.appendChild(table_head);
         this.table.appendChild(table_body);
+
         this.table_container.appendChild(this.table);
     }
 
@@ -207,60 +164,30 @@ class EditTable {
     }
 
     createEditingToolbar(td) {
-        const save_btn = document.createElement('button');
-        const cancel_btn = document.createElement('button');
+        const row_id = td.getAttribute('data-id');
         const data_type = td.getAttribute('data-type');
-        let input_type = null;
-        switch (data_type){
-            case 'int':
-                input_type = 'number';
-                break;
-            case 'str':
-                input_type = 'text';
-                break;
-            case 'bool':
-                input_type = 'checkbox';
-                break;
-            case 'date':
-                input_type = 'date';
-                break;
-            case 'datetime':
-                input_type = 'datetime-local';
-                break;
-            case 'float':
-                input_type = 'number';
-                break;
-            default:
-                input_type = 'text';
-                break;
+        const column = td.getAttribute('data-key');
+        const current_value = td.getAttribute('data-value');
 
-        }
-        const input = document.createElement('input');
-        input.setAttribute('type', input_type);
-        if (input_type == 'checkbox') {
-            if (td.getAttribute('data-value') != '0') {
-                input.checked = true;
-            }
-            else {
-                input.checked = false;
-            }
-        }
-        else {
-            input.setAttribute('value', td.getAttribute('data-value'));
-        }
+        let input = this.getInput(data_type, column, current_value);
         input.classList.add('toolbar-input');
-        const toolbar = document.createElement('div');
 
+        const save_btn = document.createElement('button');
         save_btn.classList.add('save_btn');
-        cancel_btn.classList.add('cancel_btn');
-        toolbar.classList.add('toolbar');
-        
         save_btn.textContent = 'Save';
+        const cancel_btn = document.createElement('button');
+        cancel_btn.classList.add('cancel_btn');
         cancel_btn.textContent = 'Cancel';
 
+        const toolbar_buttons = document.createElement('div');
+        toolbar_buttons.classList.add('buttons');
+        toolbar_buttons.appendChild(cancel_btn);
+        toolbar_buttons.appendChild(save_btn);
+
+        const toolbar = document.createElement('div');
+        toolbar.classList.add('toolbar');
         toolbar.appendChild(input);
-        toolbar.appendChild(cancel_btn);
-        toolbar.appendChild(save_btn);
+        toolbar.appendChild(toolbar_buttons);
 
         td.innerHTML = '';
         td.appendChild(toolbar);
@@ -286,19 +213,79 @@ class EditTable {
     }
 
     findEditing() {
-        let table_body = this.table.childNodes[0];
+        let table_body = this.table.childNodes[1];
         let rows = table_body.childNodes;
 
-        for (let row=0; row<rows.length; row++) {
-            let cells = rows[row].childNodes;
-            for (let col=0; col<cells.length; col++) {
-                if (cells[col].classList.contains('editing')) {
-                    return cells[col];
+        for (let i = 0; i < rows.length; i++) {
+            let row = rows[i];
+            let cells = row.childNodes;
+
+            for (let j = 0; j < cells.length; j++) {
+                let cell = cells[j];
+                if (this.inEditing(cell)) {
+                    return cell;
                 }
             }
         }
-        return null;
 
+        return null;
+    }
+
+    getInput(type, column, value=null) {
+        let input = null;
+
+        switch (type) {
+            case 'int':
+                input = document.createElement('input');
+                input.setAttribute('type', 'number');
+                input.setAttribute('column', column);
+                input.setAttribute('value', (value ? value : 0));
+                break;
+            
+            case 'str':
+                input = document.createElement('input');
+                input.setAttribute('type', 'text');
+                input.setAttribute('column', column);
+                input.setAttribute('value', (value ? value : ''));
+                break;
+
+            case 'bool':
+                input = document.createElement('input');
+                input.setAttribute('type', 'checkbox');
+                input.setAttribute('column', column);
+                if (value != 0 && value != null) {
+                    input.checked = true;
+                }
+                break;
+
+            case 'date':
+                input = document.createElement('input');
+                input.setAttribute('type', 'date');
+                input.setAttribute('column', column);
+                input.setAttribute('value', (value ? value : ''));
+                break;
+
+            case 'datetime':
+                input = document.createElement('input');
+                input.setAttribute('type', 'datetime-local');
+                input.setAttribute('column', column);
+                input.setAttribute('value', (value ? value : ''));
+                break;
+
+            case 'float':
+                input = document.createElement('input');
+                input.setAttribute('type', 'number');
+                input.setAttribute('column', column);
+                input.setAttribute('value', (value ? value : 0.0));
+                break;
+            
+            default:
+                input = document.createElement('input');
+                input.setAttribute('type', 'text');
+                break;
+        }
+
+        return input;
     }
 
     sendData(td, new_value) {

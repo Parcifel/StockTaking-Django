@@ -10,6 +10,8 @@
         align-items: center;
 
         padding-top: 20px;
+
+        font-family: var(--font-family-primary);
     }
 
     nav {
@@ -24,12 +26,9 @@
         max-width: 1000px;
         min-width: 500px;
 
-        border: 1px solid rgba(219, 242, 247, 0.6);
-        border-radius: 10px;
-        background-color: rgba(220, 219, 219, 0.55);
-        box-shadow: 0 0 10px 5px rgba(89, 113, 160, 0.3);
+        background-color: var(--bg-card);
 
-        backdrop-filter: blur(5px);
+        border-radius: 5px;
     }
 
     nav a {
@@ -37,31 +36,20 @@
         color: black;
         font-size: 1em;
         font-weight: bold;
-        font-family: 'Roboto', sans-serif;
         transition: 0.3s;
+        border-radius: 5px;
 
         padding: 10px 20px;
     }
 
-    nav a:hover {
+    nav a.logout:hover {
         background-color: rgba(74, 82, 84, 0.4);
-        border-radius: 10px;
+        border-radius: 5px;
     }
 
-    nav a.home:hover {
-        background-color: rgba(173, 226, 66, 0.7);
-    }
-
-    nav a.issue:hover {
-        background-color: rgba(229, 232, 66, 0.7);
-    }
-
-    nav a.log:hover {
-        background-color: rgba(211, 93, 162, 0.6);
-    }
-
-    nav a.admin:hover {
-        background-color: rgba(213, 48, 48, 0.6);
+    nav a:hover {
+        background-color: var(--primary-transparent);
+        border-radius: 5px;
     }
 
 

@@ -4,49 +4,13 @@
     {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'MonaspaceArgon/Argon.Font.css' %}">
-    <link rel="stylesheet" href="{% static 'MonaspaceXenon/Xenon.Font.css' %}">
+    <link rel="stylesheet" href="{% static 'globals.css' %}">
     <title>Login</title>
 </head>
 
 <style>
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        --bg-body: #0f0f0f;
-        --bg-card: #dfdcdc;
-        --shadow: rgba(223, 220, 220, 0.4);
-
-        --bg-button: #0f0f0f;
-        --button-color: #dfdcdc;
-
-        --secondary: #525252;
-
-        --font-color-primary: #0f0f0f;
-    }
-}
-
-@media (prefers-color-scheme: light) {
-    :root {
-        --bg-body: #dfdcdc;
-        --bg-card: #0f0f0f;
-
-        --bg-button: #dfdcdc;
-        --button-color: #0f0f0f;
-
-        --secondary: #aaaaaa;
-
-        --font-color-primary: #dfdcdc;
-    }
-}
-
-:root {
-    --primary: #FF881B;
-
-    --font-family-primary: 'Argon';
-}
-
 html, body {
+    font-family: var(--font-family-primary);
     margin: 0;
     padding: 0;
     height: 100%;
@@ -165,7 +129,7 @@ form {
 }
 
 .input-container .input:focus {
-    border: 2px solid var(--primary);
+    border: 1px solid var(--primary);
     color: var(--font-color-primary);
 }
 
@@ -208,7 +172,7 @@ form {
 }
 
 .submit-button:hover:not(:disabled){
-    background-color: var(--primary);
+    background-color: var(--primary-transparent);
     color: var(--font-color-primary);
     cursor: pointer;
 

@@ -3,30 +3,25 @@
 <head>
     {% load static %}
     <meta charset="UTF-8">
+    <link rel="icon" href="{% static 'favicon.svg' %}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'table.css' %}">
+    <link rel="stylesheet" href="{% static 'globals.css' %}">
     <title>Issue</title>
 </head>
 
 <style>
-    :root {
-        --royal-blue-1: #536976;
-        --royal-blue-2: #292e49;
-    }
-    
     body, html {
         height: 100vh;
         margin: 0;
 
-        /*background: linear-gradient(135deg, var(--royal-blue-1), var(--royal-blue-2) ); */
+        background-color: var(--bg-body);
     }
     
     .table_view {
-        margin-top: 50px;
-    }
-
-    th {
-        background-color: #e5e842;
+        display: flex;
+        justify-content: center;
+        padding-top: 50px;
     }
 
     .page_nav {
@@ -51,14 +46,13 @@
         padding: 20px;
         align-items: center;
         justify-content: center;
+        font-family: var(--font-family-primary);
 
-        background-color: rgba(220, 220, 220, 0.6);
-        border-radius: 10px;
-        border: 2px solid rgba(231, 231, 231, 0.4);
+        background-color: var(--bg-card);
+        border-radius: 5px;
     
         box-shadow: 0 0 10px 5px rgba(68, 68, 68, 0.6);
-        backdrop-filter: blur(5px);
-
+    
         transition: height 5s;
     }
 
@@ -66,10 +60,37 @@
         margin: 0 auto;
         padding-bottom: 10px;
         cursor: pointer;
+        font-weight: bold;
+        color: var(--font-family-primary);
     }
 
-    .log_new_header.active {
-        text-decoration: underline;
+    .log_new_header::after {
+        content: "";
+        display: block;
+        position: relative;
+
+        left: 50%;
+
+        width: 0;
+        height: 0;
+
+        background-color: var(--font-color-primary);
+
+        transition: all 0.3s ease-in-out;
+    }
+
+    .log_new_header.active::after {
+        content: "";
+        display: block;
+
+        left: 0%;
+
+        width: 100%;
+        height: 2px;
+
+        background-color: var(--font-color-primary);
+
+        transition: all 0.2s ease-in-out;
     }
 
     .add_form {
@@ -82,8 +103,8 @@
 
         display: grid;
         grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
-        grid-gap: 10px;
+        grid-template-rows: auto;
+        grid-gap: 1rem;
     }
 
     .loading_message {
@@ -94,28 +115,49 @@
         display: block;
     }
 
-    /*.stock_select {
-        position: relative;
-        display: inline-block;
+    .add_form label {
+        font-weight: bold;
+        color: var(--font-color-primary);
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
     }
 
-    .search_links {
-        position: absolute;
-        z-index: 1;
-        background-color: white;
-        padding: 0 5px;
-        color: black;
-        cursor: pointer;
-    }    
+    .add_form select {
+        width: 100%;
+        height: 100%;
+        padding: 0.5rem;
+ 
+        border: 2px solid var(--font-color-primary);
+        border-radius: 5px;
 
-    .search_links {
-        display: none;
+        background-color: transparent;
+        color: var(--font-color-primary);
+        font-family: var(--font-family-primary);
+        font-size: 1rem;
     }
 
-    .search_links.show {
-        display: block;
-    
-    }*/
+    .add_form select:focus {
+        outline: none;
+    }
+
+    .add_form input[type="number"] {
+        width: min-content;
+        max-width: 200px;
+        padding: 0.5rem;
+
+        border: 2px solid var(--font-color-primary);
+        border-radius: 5px;
+
+        background-color: transparent;
+        color: var(--font-color-primary);
+        font-family: var(--font-family-primary);
+        font-size: 1rem;
+    }
+
+    .add_form input[type="number"]:focus {
+        outline: none;
+    }
 
     .submit_container {
         grid-column-start: 1;
@@ -128,9 +170,35 @@
     }
 
     .add_submit {
-        width: max-content;
+        margin-bottom: 1rem;
+        padding: 0.5rem;
+
+        width: 60%;
+        aspect-ratio: 7/1;
+
+        background-color: var(--bg-button);
+        color: var(--button-color);
+
+        font-family: var(--font-family-primary);
+        font-size: 1rem;
+        font-weight: bold;
+
+        border: none;
+        border-radius: 5px;
+    }
+
+    .add_submit:hover {
+        background-color: var(--primary-transparent);
+        color: var(--font-color-primary);
+        cursor: pointer;
     }
     
+    .add_submit:active {
+        background-color: var(--primary);
+        color: var(--font-color-primary);
+        cursor: pointer;
+    }
+
     .log_message {
         display: none;
     }
@@ -143,6 +211,11 @@
         text-decoration: underline;
         color: white;
         font-weight: bold;
+    }
+
+    nav a.issue {
+        background: var(--primary-gradient);
+        color: var(--text-primary);
     }
 
 </style>
@@ -175,7 +248,7 @@
                 <div class="search_links"></div>
             </div> -->
 
-            <label for="quantity">Quantity</label>
+            <label for="quantity">Quantity: </label>
             <input type="number" id="quantity">
 
             <div class="submit_container">

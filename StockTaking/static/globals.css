@@ -1,0 +1,43 @@
+@import url('MonaspaceArgon/Argon.Font.css');
+@import url('MonaspaceXenon/Xenon.Font.css');
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-body: #0f0f0f;
+        --bg-card: #dfdcdc;
+        --shadow: rgba(223, 220, 220, 0.4);
+
+        --bg-button: #0f0f0f;
+        --button-color: #dfdcdc;
+
+        --secondary: #525252;
+
+        --font-color-primary: #0f0f0f;
+
+        --even-rows: #cbcbcb;
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        --bg-body: #dfdcdc;
+        --bg-card: #0f0f0f;
+
+        --bg-button: #dfdcdc;
+        --button-color: #0f0f0f;
+
+        --secondary: #aaaaaa;
+
+        --font-color-primary: #dfdcdc;
+    }
+}
+
+:root {
+    --primary: #FF881B;
+    --primary-transparent: rgba(255, 136, 27, 0.4);
+    --primary-cl1: #FFCF1B;
+    --primary-cl2: #FF881B;
+    --primary-gradient: linear-gradient(135deg, var(--primary-cl1), var(--primary-cl2));
+
+    --font-family-primary: Argon;
+}

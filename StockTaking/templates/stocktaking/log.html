@@ -3,31 +3,31 @@
 <head>
     {% load static %}
     <meta charset="UTF-8">
+    <link rel="icon" href="{% static 'favicon.svg' %}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'table.css' %}">
+    <link rel="stylesheet" href="{% static 'globals.css' %}">
     <title>Logs</title>
 </head>
 
 <style>
-    :root {
-        --royal-blue-1: #536976;
-        --royal-blue-2: #292e49;
-    }
     
     body, html {
         height: 100vh;
         margin: 0;
 
-        background: linear-gradient(135deg, var(--royal-blue-1), var(--royal-blue-2) );
+        background-color: var(--bg-body);
     }
     
     .table_view {
-        margin-top: 50px;
+        display: flex;
+        justify-content: center;
+        padding-top: 50px;
     }
 
-    th {
-        background-color: #d35da2;
-        color: white;
+    nav a.log {
+        background: var(--primary-gradient);
+        color: var(--text-primary);
     }
 </style>
 

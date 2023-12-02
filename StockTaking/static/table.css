@@ -1,4 +1,221 @@
-table, th, td {
+@import url('globals.css');
+
+table, thead, th, tbody, tr, td {
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 0 auto;
+
+    font-family: var(--primary-font-family);
+}
+
+table {
+    table-layout: fixed;
+}
+
+
+table tbody {
+    width: 100%;
+    background-color: var(--bg-card);
+
+    overflow: auto;
+}
+
+table thead {
+    width: 100%;
+
+    background: var(--primary-gradient);
+}
+
+table thead th:first-child {
+    border-radius: 5px 0 0 0;
+}
+table thead th:last-child {
+    border-radius: 0 5px 0 0;
+}
+table tbody tr:last-child td:first-child {
+    border-radius: 0 0 0 5px;
+}
+table tbody tr:last-child td:last-child {
+    border-radius: 0 0 5px 0;
+}
+
+table th, table td {
+    padding: 10px;
+    text-align: center;
+}
+
+table th {
+    color: var(--font-color-primary);
+    font-weight: bold;
+}
+
+table tr:nth-child(even) {
+    background-color: var(--even-rows);
+}
+
+.add_row_submit {
+    background-color: var(--bg-button);
+    color: var(--button-color);
+    border: 2px solid var(--font-color-primary);
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.add_row_submit:hover {
+    background-color: var(--primary-transparent);
+    color: var(--font-color-primary);
+    border: none;
+}
+
+.add_row_submit:active {
+    background-color: var(--primary);
+    color: var(--font-color-primary);
+}
+
+input[type="text"] {
+    background-color: transparent;
+    color: var(--font-color-primary);
+    border: 2px solid var(--font-color-primary);
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+input[type="text"]:focus {
+    outline: none;
+}
+
+input[type="number"] {
+    background-color: transparent;
+    color: var(--font-color-primary);
+    border: 2px solid var(--font-color-primary);
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+}
+
+input[type="number"]:focus {
+    outline: none;
+}
+
+input[type="date"] {
+    background-color: transparent;
+    color: var(--font-color-primary);
+    border: 2px solid var(--font-color-primary);
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+}
+
+input[type="date"]:focus {
+    outline: none;
+}
+
+input[type="datetime-local"] {
+    background-color: transparent;
+    color: var(--font-color-primary);
+    border: 2px solid var(--font-color-primary);
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+}
+
+input[type="datetime-local"]:focus {
+    outline: none;
+}
+
+input[type="checkbox"] {
+    appearance: none;
+    width: 0;
+    background-color: transparent;
+    color: var(--font-color-primary);
+    border: 2px solid var(--font-color-primary);
+    border-radius: 5px;
+    padding: 0.5rem 0.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    aspect-ratio: 1/1;
+}
+
+input[type="checkbox"]:focus {
+    outline: none;
+}
+
+input[type="checkbox"]:checked {
+    background: var(--primary-gradient);
+    color: var(--font-color-primary);
+    border: none;
+}
+
+.toolbar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.toolbar .buttons {
+    margin-top: 0.5rem;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.save_btn {
+    background-color: var(--bg-button);
+    color: var(--button-color);
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.save_btn:hover {
+    background-color: rgba(130, 225, 53, 0.4);
+    color: var(--font-color-primary);
+}
+
+.save_btn:active {
+    background-color: rgb(130, 225, 53);
+    color: var(--font-color-primary);
+}
+
+.cancel_btn {
+    background-color: var(--bg-button);
+    color: var(--button-color);
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.cancel_btn:hover {
+    background-color: rgba(225, 53, 53, 0.4);
+    color: var(--font-color-primary);
+}
+
+.cancel_btn:active {
+    background-color: rgb(225, 53, 53);
+    color: var(--font-color-primary);
+}
+
+
+
+
+
+
+/* table, th, td {
     border-collapse: seperate;
     border-spacing: 0;
     margin: 0 auto;
@@ -32,4 +249,4 @@ tr {
 td {
     position: relative;
     outline: 0;
-}
+} */
