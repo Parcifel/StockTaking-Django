@@ -9,6 +9,8 @@
 >  - MySQL
 >  - JQuery - Ajax
 >  - In-Place Editing
+>
+> It allows you to view the quantoty left on each stock, Allows users to issue new stock with different types of transaction types, view all transactions and also from the admin page the user is able to edit some tables from the database using in place table edits and ajax-POST requests
 
 
 ## Installation
