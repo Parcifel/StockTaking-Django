@@ -17,7 +17,7 @@
 ## Installation (Docker):
 
 **1. Configuration file:**
-> Copy the `configfile` from `setup_files` into StockTaking folder next to `manage.py``
+> Copy the `configfile` from `setup_files` into StockTaking folder next to `manage.py`
 > Rename this file to `config.ini`  
 
 
